@@ -1,0 +1,151 @@
+[1mdiff --git a/ForSew/ForSew.csproj b/ForSew/ForSew.csproj[m
+[1mindex 2646284..d867c0f 100644[m
+[1m--- a/ForSew/ForSew.csproj[m
+[1m+++ b/ForSew/ForSew.csproj[m
+[36m@@ -46,6 +46,7 @@[m
+     <Reference Include="System.Xml" />[m
+   </ItemGroup>[m
+   <ItemGroup>[m
+[32m+[m[32m    <Compile Include="Deal.cs" />[m
+     <Compile Include="Form1.cs">[m
+       <SubType>Form</SubType>[m
+     </Compile>[m
+[36m@@ -54,6 +55,11 @@[m
+     </Compile>[m
+     <Compile Include="Program.cs" />[m
+     <Compile Include="Properties\AssemblyInfo.cs" />[m
+[32m+[m[32m    <Compile Include="Strategy.cs" />[m
+[32m+[m[32m    <Compile Include="Tool.cs" />[m
+[32m+[m[32m    <EmbeddedResource Include="Form1.resx">[m
+[32m+[m[32m      <DependentUpon>Form1.cs</DependentUpon>[m
+[32m+[m[32m    </EmbeddedResource>[m
+     <EmbeddedResource Include="Properties\Resources.resx">[m
+       <Generator>ResXFileCodeGenerator</Generator>[m
+       <LastGenOutput>Resources.Designer.cs</LastGenOutput>[m
+[1mdiff --git a/ForSew/Form1.Designer.cs b/ForSew/Form1.Designer.cs[m
+[1mindex 955c3cf..253a2fe 100644[m
+[1m--- a/ForSew/Form1.Designer.cs[m
+[1m+++ b/ForSew/Form1.Designer.cs[m
+[36m@@ -28,13 +28,67 @@[m
+         /// </summary>[m
+         private void InitializeComponent()[m
+         {[m
+[31m-            this.components = new System.ComponentModel.Container();[m
+[32m+[m[32m            this.parsing = new System.Windows.Forms.Button();[m
+[32m+[m[32m            this.textBox1 = new System.Windows.Forms.TextBox();[m
+[32m+[m[32m            this.fileName = new System.Windows.Forms.Label();[m
+[32m+[m[32m            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();[m
+[32m+[m[32m            this.SuspendLayout();[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // parsing[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.parsing.Location = new System.Drawing.Point(12, 41);[m
+[32m+[m[32m            this.parsing.Name = "parsing";[m
+[32m+[m[32m            this.parsing.Size = new System.Drawing.Size(94, 36);[m
+[32m+[m[32m            this.parsing.TabIndex = 0;[m
+[32m+[m[32m            this.parsing.Text = "Парсить";[m
+[32m+[m[32m            this.parsing.UseVisualStyleBackColor = true;[m
+[32m+[m[32m            this.parsing.Click += new System.EventHandler(this.parsing_Click);[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // textBox1[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.textBox1.Location = new System.Drawing.Point(112, 41);[m
+[32m+[m[32m            this.textBox1.Multiline = true;[m
+[32m+[m[32m            this.textBox1.Name = "textBox1";[m
+[32m+[m[32m            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;[m
+[32m+[m[32m            this.textBox1.Size = new System.Drawing.Size(676, 397);[m
+[32m+[m[32m            this.textBox1.TabIndex = 1;[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // fileName[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.fileName.AutoSize = true;[m
+[32m+[m[32m            this.fileName.Cursor = System.Windows.Forms.Cursors.Hand;[m
+[32m+[m[32m            this.fileName.Location = new System.Drawing.Point(12, 9);[m
+[32m+[m[32m            this.fileName.Name = "fileName";[m
+[32m+[m[32m            this.fileName.Size = new System.Drawing.Size(45, 17);[m
+[32m+[m[32m            this.fileName.TabIndex = 2;[m
+[32m+[m[32m            this.fileName.Text = "Файл";[m
+[32m+[m[32m            this.fileName.Click += new System.EventHandler(this.fileName_Click);[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // openFileDialog1[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.openFileDialog1.FileName = "openFileDialog1";[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            // Form1[m
+[32m+[m[32m            //[m[41m [m
+[32m+[m[32m            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);[m
+             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;[m
+             this.ClientSize = new System.Drawing.Size(800, 450);[m
+[32m+[m[32m            this.Controls.Add(this.fileName);[m
+[32m+[m[32m            this.Controls.Add(this.textBox1);[m
+[32m+[m[32m            this.Controls.Add(this.parsing);[m
+[32m+[m[32m            this.Name = "Form1";[m
+             this.Text = "Form1";[m
+[32m+[m[32m            this.ResumeLayout(false);[m
+[32m+[m[32m            this.PerformLayout();[m
+[32m+[m
+         }[m
+ [m
+         #endregion[m
+[32m+[m
+[32m+[m[32m        private System.Windows.Forms.Button parsing;[m
+[32m+[m[32m        private System.Windows.Forms.TextBox textBox1;[m
+[32m+[m[32m        private System.Windows.Forms.Label fileName;[m
+[32m+[m[32m        private System.Windows.Forms.OpenFileDialog openFileDialog1;[m
+     }[m
+ }[m
+ [m
+[1mdiff --git a/ForSew/Form1.cs b/ForSew/Form1.cs[m
+[1mindex fb80d09..230e9d4 100644[m
+[1m--- a/ForSew/Form1.cs[m
+[1m+++ b/ForSew/Form1.cs[m
+[36m@@ -12,9 +12,49 @@[m [mnamespace ForSew[m
+ {[m
+     public partial class Form1 : Form[m
+     {[m
+[32m+[m[32m        private string path;[m
+[32m+[m[32m        private bool isFileSelected;[m
+[32m+[m
+         public Form1()[m
+         {[m
+             InitializeComponent();[m
+[32m+[m[32m            //fileName.Click += fileName_Click;[m
+[32m+[m[32m            isFileSelected = false;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        private void fileName_Click(object sender, EventArgs e)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            openFileDialog1.Filter = "Strategy files(*.rep)|*.rep|All files(*.*)|*.*";[m
+[32m+[m
+[32m+[m[32m            if (openFileDialog1.ShowDialog() == DialogResult.Cancel)[m
+[32m+[m[32m            {[m
+[32m+[m[32m                return;[m
+[32m+[m[32m            }[m
+[32m+[m[32m            // получаем выбранный файл[m
+[32m+[m[32m            path = openFileDialog1.FileName;[m
+[32m+[m[32m            isFileSelected = true;[m
+[32m+[m[32m            fileName.Text = path;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        private void parsing_Click(object sender, EventArgs e)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            if (isFileSelected)[m
+[32m+[m[32m            {[m
+[32m+[m[32m                Strategy strategy = new Strategy(path);[m
+[32m+[m
+[32m+[m[32m                MessageBox.Show(strategy.Deals.Count.ToString());[m
+[32m+[m
+[32m+[m[32m                textBox1.Clear();[m
+[32m+[m
+[32m+[m[32m                foreach (Deal deal in strategy.Deals)[m
+[32m+[m[32m                {[m
+[32m+[m[32m                    textBox1.AppendText(deal.DealMoment + " | " + deal.DealType + " | " + deal.DealAmount+Environment.NewLine);[m
+[32m+[m[32m                }[m
+[32m+[m[32m            }[m
+[32m+[m[32m            else[m
+[32m+[m[32m            {[m
+[32m+[m[32m                textBox1.Text = "Нажмите на слово <Файл> слева вверху и выберите файл.";[m
+[32m+[m[32m            }[m
+         }[m
+     }[m
+ }[m
