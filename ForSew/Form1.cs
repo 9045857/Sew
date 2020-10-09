@@ -18,7 +18,6 @@ namespace ForSew
         public Form1()
         {
             InitializeComponent();
-            //fileName.Click += fileName_Click;
             isFileSelected = false;
         }
 
@@ -40,7 +39,7 @@ namespace ForSew
         {
             if (isFileSelected)
             {
-                Strategy strategy = new Strategy(path);
+                Strategy strategy = StrategyRepParse.ParseCreateStrategy(path);
 
                 MessageBox.Show(strategy.Deals.Count.ToString());
 
