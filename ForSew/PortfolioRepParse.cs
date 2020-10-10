@@ -14,7 +14,7 @@ namespace ForSew
         private const string InstrumentSearchPhrase = "Instrument=";
         private const string FolderSearchPhrase = "Folder=";
 
-        public Portfolio ParseCreatePortfolio(string path)
+        public static Portfolio ParseCreatePortfolio(string path)
         {
             if (!File.Exists(path))
             {
@@ -36,32 +36,39 @@ namespace ForSew
         {
             Dictionary<InstrumentTypes, List<string>> paths = new Dictionary<InstrumentTypes, List<string>>();
 
-            List<string> lines = File.ReadAllLines(path, Encoding.GetEncoding(1251)).ToList();
-
+            List<string> lines = File.ReadAllLines(path, Encoding.UTF8/*GetEncoding(1251)*/).ToList();
+             
             InstrumentTypes instrumentTypes = InstrumentTypes.None;
             int FolderSearchPhraseLength = FolderSearchPhrase.Length;
 
             foreach (string line in lines)
             {
-                if (instrumentTypes == InstrumentTypes.None)
-                {
-                    continue;
-                }
-
                 if (line.Contains(COINCheckPhrase))
                 {
                     instrumentTypes = InstrumentTypes.COIN;
                     CreatePaths(paths, instrumentTypes);
                     continue;
                 }
-                else if (line.Contains(COINCheckPhrase))
+                else if (line.Contains(ETHUSDCheckPhrase))
                 {
                     instrumentTypes = InstrumentTypes.ETHUSD;
                     CreatePaths(paths, instrumentTypes);
                     continue;
                 }
+                else if (instrumentTypes == InstrumentTypes.None)
+                {
+                    continue;
+                }
 
+                if (line.Length < FolderSearchPhraseLength)
+                {
+                    continue;
+                }
+                               
                 string strategyPath = line.Substring(FolderSearchPhraseLength);
+
+                Console.WriteLine("{0}: {1}", instrumentTypes, strategyPath);
+
                 paths[instrumentTypes].Add(strategyPath);
             }
 
@@ -93,7 +100,7 @@ namespace ForSew
                 Instrument instrument = new Instrument(instrumentPath.Key, strategies);
                 instruments.Add(instrument);
             }
-            
+
             return instruments;
         }
     }
