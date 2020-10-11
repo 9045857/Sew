@@ -23,7 +23,7 @@ namespace ForSew
 
         private void fileName_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Filter = "Strategy files(*.rep)|*.rep|All files(*.*)|*.*";
+            openFileDialog1.Filter = "Portfolio files(*.txt)|*.txt|All files(*.*)|*.*";
 
             if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
             {
@@ -39,16 +39,37 @@ namespace ForSew
         {
             if (isFileSelected)
             {
-                Strategy strategy = StrategyRepParse.ParseCreateStrategy(path);
-
-                MessageBox.Show(strategy.Deals.Count.ToString());
+                //Strategy strategy = StrategyRepParse.ParseCreateStrategy(path);
+                Portfolio portfolio = PortfolioRepParse.ParseCreatePortfolio(path);
+                MessageBox.Show(portfolio.Instruments.Count.ToString());
 
                 textBox1.Clear();
 
-                foreach (Deal deal in strategy.Deals)
+                foreach (Instrument instrument in portfolio.Instruments)
                 {
-                    textBox1.AppendText(deal.DealMoment + " | " + deal.DealType + " | " + deal.DealAmount+Environment.NewLine);
+                    currentInstrument.Clear();
+                    currentInstrument.AppendText(instrument.InstrumentType.ToString());
+
+                    int strategyNumber = 0;
+
+                    foreach (Strategy strategy in instrument.Strategies)
+                    {
+                        // currentStrategy.Text = strategy.ToString();
+                        currentStrategy.Clear();
+                        currentStrategy.AppendText(strategyNumber.ToString());
+
+                        foreach (Deal deal in strategy.Deals)
+                        {
+                            textBox1.AppendText(deal.DealMoment + " | " + deal.DealType + " | " + deal.DealAmount + Environment.NewLine);
+                        }
+                        strategyNumber++;
+                    }
                 }
+
+                //foreach (Deal deal in portfolio.Instruments strategy.Deals)
+                //{
+                //    textBox1.AppendText(deal.DealMoment + " | " + deal.DealType + " | " + deal.DealAmount+Environment.NewLine);
+                //}
             }
             else
             {

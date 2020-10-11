@@ -9,7 +9,8 @@ namespace ForSew
 {
     public class StrategyRepParse
     {
-        public static Strategy ParseCreateStrategy(string path) {
+        public static Strategy ParseCreateStrategy(string path)
+        {
             if (!File.Exists(path))
             {
                 //TODO need to do smth with this error
@@ -21,18 +22,19 @@ namespace ForSew
 
         private static List<Deal> ParseDeals(string path)
         {
-            List<string> lines = File.ReadAllLines(path, Encoding.GetEncoding(1251)).ToList();
+            List<string> lines = File.ReadAllLines(path, Encoding.UTF8/*GetEncoding(1251)*/).ToList();
 
             //TODO пока первая строчка лишняя по формату. Временное решение - убираем ее из массива
             lines.RemoveAt(0);
 
             List<Deal> deals = new List<Deal>();
 
-            foreach (string line in lines) {
+            foreach (string line in lines)
+            {
                 Deal deal = DealRepParse.ParseCreateDeal(line);
                 deals.Add(deal);
             }
-            
+
             return deals;
         }
     }
