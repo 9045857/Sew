@@ -10,7 +10,7 @@ namespace ForSew
     {
         public delegate void AccountWarnings(string message);
         public event AccountWarnings Notify;
-        //Вторая ветка для теста, как это будет на Гитхабе
+        //третья ветка к веткеа для теста, как это будет на Гитхабе
 
     }
 }
