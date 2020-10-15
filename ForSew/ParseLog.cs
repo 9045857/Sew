@@ -10,6 +10,7 @@ namespace ForSew
     {
         public delegate void AccountWarnings(string message);
         public event AccountWarnings Notify;
+        //тест возврата
 
     }
 }
