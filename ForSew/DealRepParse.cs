@@ -8,21 +8,33 @@ namespace ForSew
 {
     public class DealRepParse
     {
+        public static event ParseLog.AccountWarnings Notify;
+
         private const string stringDivider = "|";
         private const string boughtType = "Куплены";
         private const string soldType = "Проданы";
-
+        
         public static Deal ParseCreateDeal(string dealData)
         {
-            string dealItem = PickAndCutItem(ref dealData);
-            DateTime dealMoment = ParseMoment(dealItem);
+            string dealLine = dealData;
 
-            string removingBlock = PickAndCutItem(ref dealData);
+            string dealItem = PickAndCutItem(ref dealLine);
+            DateTime dealMoment = new DateTime();
 
-            dealItem = PickAndCutItem(ref dealData);
+            if (!TryParseMoment(dealItem, ref dealMoment))
+            {
+                Notify?.Invoke(string.Format(Warnings.DealDateTimeDontParsed, dealItem));
+                return null;
+            }
+            //TODO передалать на проверку парсинга и вывод нула
+
+
+            string removingBlock = PickAndCutItem(ref dealLine);
+
+            dealItem = PickAndCutItem(ref dealLine);
             DealTypes dealType = ParseType(dealItem);
 
-            dealItem = PickAndCutItem(ref dealData);
+            dealItem = PickAndCutItem(ref dealLine);
             float dealAmount = ParseAmount(dealItem);
 
             return new Deal(dealMoment, dealType, dealAmount);
@@ -45,37 +57,46 @@ namespace ForSew
             return pickedData;
         }
 
-        private static DateTime ParseMoment(string dealMoment)
+        private static bool TryParseMoment(string dealMoment, ref DateTime dateTime)
         {
-            //пример входящего формата 2018/01/01/11:06
-            int itemsCount = 5;
-            string[] momentItems = new string[itemsCount];
-
-            string universalDivider = "/";
-            string badDivider = ":";
-            dealMoment = dealMoment.Replace(badDivider, universalDivider);
-
-            for (int i = 0; i < itemsCount - 1; i++)
+            try
             {
-                int dividerPosition = dealMoment.IndexOf(universalDivider);
+                //пример входящего формата 2018/01/01/11:06
+                int itemsCount = 5;
+                string[] momentItems = new string[itemsCount];
 
-                string pickedData = dealMoment.Substring(0, dividerPosition);
+                string universalDivider = "/";
+                string badDivider = ":";
+                string moment = dealMoment.Replace(badDivider, universalDivider);
 
-                dealMoment = dealMoment.Substring(dividerPosition + 1);
+                for (int i = 0; i < itemsCount - 1; i++)
+                {
+                    int dividerPosition = moment.IndexOf(universalDivider);
 
-                momentItems[i] = pickedData;
+                    string pickedData = moment.Substring(0, dividerPosition);
+
+                    moment = moment.Substring(dividerPosition + 1);
+
+                    momentItems[i] = pickedData;
+                }
+
+                momentItems[itemsCount - 1] = moment;
+
+                int year = Convert.ToInt32(momentItems[0]);
+                int month = Convert.ToInt32(momentItems[1]);
+                int day = Convert.ToInt32(momentItems[2]);
+                int hour = Convert.ToInt32(momentItems[3]);
+                int minute = Convert.ToInt32(momentItems[4]);
+                int second = 0;
+
+                dateTime = new DateTime(year, month, day, hour, minute, second);
+
+                return true;
             }
-
-            momentItems[itemsCount - 1] = dealMoment;
-
-            int year = Convert.ToInt32(momentItems[0]);
-            int month = Convert.ToInt32(momentItems[1]);
-            int day = Convert.ToInt32(momentItems[2]);
-            int hour = Convert.ToInt32(momentItems[3]);
-            int minute = Convert.ToInt32(momentItems[4]);
-            int second = 0;
-
-            return new DateTime(year, month, day, hour, minute, second);
+            catch
+            {             
+                return false;
+            }
         }
 
         private static DealTypes ParseType(string dealType)

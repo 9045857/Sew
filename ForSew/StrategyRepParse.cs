@@ -9,6 +9,8 @@ namespace ForSew
 {
     public class StrategyRepParse
     {
+        public static event ParseLog.AccountWarnings Notify;
+
         public static Strategy ParseCreateStrategy(string path)
         {
             if (!File.Exists(path))
@@ -32,6 +34,12 @@ namespace ForSew
             foreach (string line in lines)
             {
                 Deal deal = DealRepParse.ParseCreateDeal(line);
+                if (deal == null)
+                {
+                    Notify?.Invoke(string.Format(Warnings.DealDontParsed,path,line));
+                    continue;
+                }
+
                 deals.Add(deal);
             }
 

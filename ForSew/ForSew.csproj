@@ -56,6 +56,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="InstrumentTypes.cs" />
+    <Compile Include="NotifyLog.cs" />
     <Compile Include="ParseLog.cs" />
     <Compile Include="Portfolio.cs" />
     <Compile Include="PortfolioRepParse.cs" />

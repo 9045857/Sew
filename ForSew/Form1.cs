@@ -19,6 +19,7 @@ namespace ForSew
         {
             InitializeComponent();
             isFileSelected = false;
+            NotifyLog.RunLoger();
         }
 
         private void fileName_Click(object sender, EventArgs e)
@@ -41,7 +42,7 @@ namespace ForSew
             {
                 //Strategy strategy = StrategyRepParse.ParseCreateStrategy(path);
                 Portfolio portfolio = PortfolioRepParse.ParseCreatePortfolio(path);
-                MessageBox.Show(portfolio.Instruments.Count.ToString());
+                //MessageBox.Show(portfolio.Instruments.Count.ToString());
 
                 textBox1.Clear();
 

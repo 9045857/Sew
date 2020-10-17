@@ -9,7 +9,6 @@ namespace ForSew
     public class ParseLog
     {
         public delegate void AccountWarnings(string message);
-        public event AccountWarnings Notify;
         //мастер ветка
 
     }
