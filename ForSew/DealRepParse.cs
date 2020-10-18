@@ -1,46 +1,49 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ForSew
 {
-    public class DealRepParse
+    public class DealRepParse : ParseLog
     {
-        public static event ParseLog.AccountWarnings Notify;
+        public event AccountWarnings Notify;
 
         private const string stringDivider = "|";
         private const string boughtType = "Куплены";
         private const string soldType = "Проданы";
-        
-        public static Deal ParseCreateDeal(string dealData)
+
+        public Deal ParseCreateDeal(string dealData)
         {
             string dealLine = dealData;
 
             string dealItem = PickAndCutItem(ref dealLine);
             DateTime dealMoment = new DateTime();
-
             if (!TryParseMoment(dealItem, ref dealMoment))
             {
                 Notify?.Invoke(string.Format(Warnings.DealDateTimeDontParsed, dealItem));
                 return null;
             }
-            //TODO передалать на проверку парсинга и вывод нула
-
 
             string removingBlock = PickAndCutItem(ref dealLine);
 
             dealItem = PickAndCutItem(ref dealLine);
-            DealTypes dealType = ParseType(dealItem);
+            DealTypes dealType = new DealTypes();
+            if (!TryParseType(dealItem, ref dealType))
+            {
+                Notify?.Invoke(string.Format(Warnings.DealTypeDontParsed, dealItem));
+                return null;
+            }
 
             dealItem = PickAndCutItem(ref dealLine);
-            float dealAmount = ParseAmount(dealItem);
+            float dealAmount = 0;
+            if (!TryParseAmount(dealItem, ref dealAmount))
+            {
+                Notify?.Invoke(string.Format(Warnings.DealAmontDontParsed, dealItem));
+                return null;
+            }
 
             return new Deal(dealMoment, dealType, dealAmount);
         }
 
-        private static string PickAndCutItem(ref string dealData)
+        private string PickAndCutItem(ref string dealData)
         {
             int dividerPosition = dealData.IndexOf(stringDivider);
 
@@ -57,7 +60,7 @@ namespace ForSew
             return pickedData;
         }
 
-        private static bool TryParseMoment(string dealMoment, ref DateTime dateTime)
+        private bool TryParseMoment(string dealMoment, ref DateTime dateTime)
         {
             try
             {
@@ -72,7 +75,6 @@ namespace ForSew
                 for (int i = 0; i < itemsCount - 1; i++)
                 {
                     int dividerPosition = moment.IndexOf(universalDivider);
-
                     string pickedData = moment.Substring(0, dividerPosition);
 
                     moment = moment.Substring(dividerPosition + 1);
@@ -82,11 +84,26 @@ namespace ForSew
 
                 momentItems[itemsCount - 1] = moment;
 
-                int year = Convert.ToInt32(momentItems[0]);
-                int month = Convert.ToInt32(momentItems[1]);
-                int day = Convert.ToInt32(momentItems[2]);
-                int hour = Convert.ToInt32(momentItems[3]);
-                int minute = Convert.ToInt32(momentItems[4]);
+                if (!int.TryParse(momentItems[0], out int year))
+                {
+                    return false;
+                }
+                if (!int.TryParse(momentItems[1], out int month))
+                {
+                    return false;
+                }
+                if (!int.TryParse(momentItems[2], out int day))
+                {
+                    return false;
+                }
+                if (!int.TryParse(momentItems[3], out int hour))
+                {
+                    return false;
+                }
+                if (!int.TryParse(momentItems[4], out int minute))
+                {
+                    return false;
+                }
                 int second = 0;
 
                 dateTime = new DateTime(year, month, day, hour, minute, second);
@@ -94,30 +111,39 @@ namespace ForSew
                 return true;
             }
             catch
-            {             
+            {
                 return false;
             }
         }
 
-        private static DealTypes ParseType(string dealType)
+        private bool TryParseType(string dealTypeItem, ref DealTypes dealType)
         {
-            switch (dealType)
+            switch (dealTypeItem)
             {
                 case boughtType:
-                    return DealTypes.Bought;
+                    dealType = DealTypes.Bought;
+                    return true;
                 case soldType:
-                    return DealTypes.Sold;
+                    dealType = DealTypes.Sold;
+                    return true;
                 default:
-                    return DealTypes.None;
+                    dealType = DealTypes.None;
+                    return false;
             }
         }
 
-        private static float ParseAmount(string dealAmount)
+        private bool TryParseAmount(string dealAmountItem, ref float dealAmount)
         {
             //TODO добавить региональный вариант, что бы убрать эфект запятой
-            return float.Parse(dealAmount);
+            try
+            {
+                dealAmount = Convert.ToSingle(dealAmountItem);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
-
-
     }
 }

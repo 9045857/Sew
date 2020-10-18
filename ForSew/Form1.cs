@@ -14,12 +14,15 @@ namespace ForSew
     {
         private string path;
         private bool isFileSelected;
+        private NotifyLog notifyLog;
+        private PortfolioRepParse portfolioRepParse;
 
         public Form1()
         {
             InitializeComponent();
             isFileSelected = false;
-            NotifyLog.RunLoger();
+            portfolioRepParse = new PortfolioRepParse();
+            notifyLog =new NotifyLog(portfolioRepParse);
         }
 
         private void fileName_Click(object sender, EventArgs e)
@@ -41,7 +44,7 @@ namespace ForSew
             if (isFileSelected)
             {
                 //Strategy strategy = StrategyRepParse.ParseCreateStrategy(path);
-                Portfolio portfolio = PortfolioRepParse.ParseCreatePortfolio(path);
+                Portfolio portfolio = portfolioRepParse.ParseCreatePortfolio(path);
                 //MessageBox.Show(portfolio.Instruments.Count.ToString());
 
                 textBox1.Clear();

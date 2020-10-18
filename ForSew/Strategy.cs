@@ -9,7 +9,10 @@ namespace ForSew
     {
         public List<Deal> Deals { get; set; }
 
-        public Strategy(List<Deal> deals) {
+        public Strategy() { }
+
+        public Strategy(List<Deal> deals)
+        {
             Deals = deals;
         }
     }

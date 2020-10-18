@@ -7,22 +7,36 @@ using System.IO;
 
 namespace ForSew
 {
-    public class StrategyRepParse
+    public class StrategyRepParse : ParseLog
     {
-        public static event ParseLog.AccountWarnings Notify;
+        public event AccountWarnings Notify;
 
-        public static Strategy ParseCreateStrategy(string path)
+        private DealRepParse dealRepParse;
+
+        public StrategyRepParse()
+        {
+            dealRepParse = new DealRepParse();
+            dealRepParse.Notify += TransferInstrumentNotify;
+        }
+
+        private void TransferInstrumentNotify(string message)
+        {
+            Notify?.Invoke(message);
+        }
+
+        public Strategy ParseCreateStrategy(string path)
         {
             if (!File.Exists(path))
             {
-                //TODO need to do smth with this error
+                Notify?.Invoke(string.Format(Warnings.FileNotExist, path));
                 return null;
             }
 
             return new Strategy(ParseDeals(path));
         }
 
-        private static List<Deal> ParseDeals(string path)
+
+        private List<Deal> ParseDeals(string path)
         {
             List<string> lines = File.ReadAllLines(path, Encoding.UTF8/*GetEncoding(1251)*/).ToList();
 
@@ -33,10 +47,9 @@ namespace ForSew
 
             foreach (string line in lines)
             {
-                Deal deal = DealRepParse.ParseCreateDeal(line);
+                Deal deal = dealRepParse.ParseCreateDeal(line);
                 if (deal == null)
                 {
-                    Notify?.Invoke(string.Format(Warnings.DealDontParsed,path,line));
                     continue;
                 }
 

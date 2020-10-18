@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DealParse.cs" />
     <Compile Include="DealTypes.cs" />
     <Compile Include="Deal.cs" />
     <Compile Include="Form1.cs">
@@ -55,6 +54,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="InstrumentRepParse.cs" />
     <Compile Include="InstrumentTypes.cs" />
     <Compile Include="NotifyLog.cs" />
     <Compile Include="ParseLog.cs" />

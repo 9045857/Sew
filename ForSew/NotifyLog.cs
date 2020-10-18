@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ForSew
 {
     public class NotifyLog
     {
-        private static void Display(string text)
-        {
-           Console.WriteLine(text);
-        }
+        private PortfolioRepParse portfolioRepParse;
 
-        public static void RunLoger()
+        public NotifyLog(PortfolioRepParse portfolioRepParse)
         {
-            DealRepParse.Notify += Display;
-            StrategyRepParse.Notify += Display;
+            this.portfolioRepParse = portfolioRepParse;
+            this.portfolioRepParse.Notify += Console.WriteLine;
         }
     }
 }
