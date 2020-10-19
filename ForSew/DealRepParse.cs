@@ -118,6 +118,7 @@ namespace ForSew
 
         private bool TryParseType(string dealTypeItem, ref DealTypes dealType)
         {
+            Console.WriteLine(dealTypeItem);
             switch (dealTypeItem)
             {
                 case boughtType:

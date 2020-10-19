@@ -39,7 +39,7 @@ namespace ForSew
                 return null;
             }
 
-            List<string> lines = File.ReadAllLines(path, Encoding.UTF8/*GetEncoding(1251)*/).ToList();
+            List<string> lines = File.ReadAllLines(path/*, Encoding.UTF8*//*GetEncoding(1251)*/).ToList();
 
             InstrumentTypes instrumentTypes = InstrumentTypes.None;
             int folderSearchPhraseLength = FolderSearchPhrase.Length;

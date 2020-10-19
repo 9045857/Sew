@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 
 namespace ForSew
 {
@@ -38,7 +36,7 @@ namespace ForSew
 
         private List<Deal> ParseDeals(string path)
         {
-            List<string> lines = File.ReadAllLines(path, Encoding.UTF8/*GetEncoding(1251)*/).ToList();
+            List<string> lines = File.ReadAllLines(path, Encoding./*UTF8*/GetEncoding(1251)).ToList();
 
             //TODO пока первая строчка лишняя по формату. Временное решение - убираем ее из массива
             lines.RemoveAt(0);

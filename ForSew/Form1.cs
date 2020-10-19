@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace ForSew
 {
@@ -22,7 +23,19 @@ namespace ForSew
             InitializeComponent();
             isFileSelected = false;
             portfolioRepParse = new PortfolioRepParse();
-            notifyLog =new NotifyLog(portfolioRepParse);
+            notifyLog = new NotifyLog(portfolioRepParse);
+        }
+
+        private string GetEncoding(string path)
+        {
+            string encoding = string.Empty;
+
+            Stream fs = new FileStream(path, FileMode.Open);
+            using (StreamReader sr = new StreamReader(fs, true))
+            {
+                encoding = sr.CurrentEncoding.ToString();
+            }
+            return encoding;
         }
 
         private void fileName_Click(object sender, EventArgs e)
@@ -37,6 +50,8 @@ namespace ForSew
             path = openFileDialog1.FileName;
             isFileSelected = true;
             fileName.Text = path;
+
+            encodingLabel.Text = "Кодировка: "+GetEncoding(path);
         }
 
         private void parsing_Click(object sender, EventArgs e)

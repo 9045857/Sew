@@ -34,6 +34,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.currentInstrument = new System.Windows.Forms.TextBox();
             this.currentStrategy = new System.Windows.Forms.TextBox();
+            this.encodingLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // parsing
@@ -59,7 +60,7 @@
             // 
             this.fileName.AutoSize = true;
             this.fileName.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.fileName.Location = new System.Drawing.Point(12, 9);
+            this.fileName.Location = new System.Drawing.Point(12, 5);
             this.fileName.Name = "fileName";
             this.fileName.Size = new System.Drawing.Size(45, 17);
             this.fileName.TabIndex = 2;
@@ -72,7 +73,7 @@
             // 
             // currentInstrument
             // 
-            this.currentInstrument.Location = new System.Drawing.Point(12, 45);
+            this.currentInstrument.Location = new System.Drawing.Point(12, 48);
             this.currentInstrument.Name = "currentInstrument";
             this.currentInstrument.Size = new System.Drawing.Size(776, 22);
             this.currentInstrument.TabIndex = 5;
@@ -84,11 +85,21 @@
             this.currentStrategy.Size = new System.Drawing.Size(776, 22);
             this.currentStrategy.TabIndex = 6;
             // 
+            // encodingLabel
+            // 
+            this.encodingLabel.AutoSize = true;
+            this.encodingLabel.Location = new System.Drawing.Point(12, 25);
+            this.encodingLabel.Name = "encodingLabel";
+            this.encodingLabel.Size = new System.Drawing.Size(79, 17);
+            this.encodingLabel.TabIndex = 7;
+            this.encodingLabel.Text = "Кодировка";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.encodingLabel);
             this.Controls.Add(this.currentStrategy);
             this.Controls.Add(this.currentInstrument);
             this.Controls.Add(this.fileName);
@@ -109,6 +120,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.TextBox currentInstrument;
         private System.Windows.Forms.TextBox currentStrategy;
+        private System.Windows.Forms.Label encodingLabel;
     }
 }
 
