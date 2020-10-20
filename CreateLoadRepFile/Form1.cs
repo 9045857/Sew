@@ -129,7 +129,7 @@ namespace CreateLoadRepFile
                         sw.WriteLine(COINCheckPhrase);
                         foreach (string line in _COINFiles)
                         {
-                            sw.WriteLine(line);
+                            sw.WriteLine(FolderSearchPhrase +  line);
                         }
                     }
 
@@ -138,7 +138,7 @@ namespace CreateLoadRepFile
                         sw.WriteLine(ETHUSDCheckPhrase);
                         foreach (string line in _ETHUSDFiles)
                         {
-                            sw.WriteLine(line);
+                            sw.WriteLine(FolderSearchPhrase + line);
                         }
                     }
                 }
