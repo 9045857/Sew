@@ -13,17 +13,23 @@ namespace ForSew
 {
     public partial class Form1 : Form
     {
-        private string path;
-        private bool isFileSelected;
+        private string _inputFilePath;
+        private string _outputFilePath;
+
+        private bool isInputFileSelected;
+
         private NotifyLog notifyLog;
         private PortfolioRepParse portfolioRepParse;
 
         public Form1()
         {
             InitializeComponent();
-            isFileSelected = false;
+            isInputFileSelected = false;
             portfolioRepParse = new PortfolioRepParse();
             notifyLog = new NotifyLog(portfolioRepParse);
+
+            openFileDialog1.Filter = "Portfolio files(*.txt)|*.txt|All files(*.*)|*.*";
+            saveFileDialog1.Filter = "Portfolio files(*.txt)|*.txt|All files(*.*)|*.*";
         }
 
         private string GetEncoding(string path)
@@ -40,59 +46,71 @@ namespace ForSew
 
         private void fileName_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Filter = "Portfolio files(*.txt)|*.txt|All files(*.*)|*.*";
-
             if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
             {
                 return;
             }
             // получаем выбранный файл
-            path = openFileDialog1.FileName;
-            isFileSelected = true;
-            fileName.Text = path;
-
-            encodingLabel.Text = "Кодировка: "+GetEncoding(path);
+            _inputFilePath = openFileDialog1.FileName;
+            isInputFileSelected = true;
+            fileName.Text = "Файл: " + _inputFilePath;
         }
 
         private void parsing_Click(object sender, EventArgs e)
         {
-            if (isFileSelected)
+            if (!isInputFileSelected)
             {
-                //Strategy strategy = StrategyRepParse.ParseCreateStrategy(path);
-                Portfolio portfolio = portfolioRepParse.ParseCreatePortfolio(path);
-                //MessageBox.Show(portfolio.Instruments.Count.ToString());
+                MessageBox.Show("Нажмите на слово <Файл> слева вверху и выберите файл входных данных.");
+                return;
+            }
 
-                textBox1.Clear();
+            if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
+            {
+                return;
+            }
 
-                foreach (Instrument instrument in portfolio.Instruments)
+            try
+            {
+                string fileName = saveFileDialog1.FileName;
+
+                saveFileLabel.Text = "Файл: " + fileName;
+                _outputFilePath = fileName;
+
+                Portfolio portfolio = portfolioRepParse.ParseCreatePortfolio(_inputFilePath);
+
+                using (StreamWriter sw = new StreamWriter(fileName, false, System.Text.Encoding.UTF8))
                 {
-                    currentInstrument.Clear();
-                    currentInstrument.AppendText(instrument.InstrumentType.ToString());
-
-                    int strategyNumber = 0;
-
-                    foreach (Strategy strategy in instrument.Strategies)
+                    foreach (Instrument instrument in portfolio.Instruments)
                     {
-                        // currentStrategy.Text = strategy.ToString();
-                        currentStrategy.Clear();
-                        currentStrategy.AppendText(strategyNumber.ToString());
+                        sw.WriteLine(instrument.InstrumentType.ToString());
 
-                        foreach (Deal deal in strategy.Deals)
+                        foreach (Strategy strategy in instrument.Strategies)
                         {
-                            textBox1.AppendText(deal.DealMoment + " | " + deal.DealType + " | " + deal.DealAmount + Environment.NewLine);
+                            foreach (Deal deal in strategy.Deals)
+                            {
+                                string dealMoment = deal.DealMoment.ToString();
+                                string dealType = deal.DealType.ToString();
+                                string dealAmount = deal.DealAmount.ToString();
+
+                                sw.WriteLine(dealMoment + " - " + dealType + " - " + dealAmount);
+                            }
                         }
-                        strategyNumber++;
                     }
                 }
 
-                //foreach (Deal deal in portfolio.Instruments strategy.Deals)
-                //{
-                //    textBox1.AppendText(deal.DealMoment + " | " + deal.DealType + " | " + deal.DealAmount+Environment.NewLine);
-                //}
+                MessageBox.Show("Запись выполнена");
             }
-            else
+            catch (Exception ex)
             {
-                textBox1.Text = "Нажмите на слово <Файл> слева вверху и выберите файл.";
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void saveFileLabel_Click(object sender, EventArgs e)
+        {
+            if (File.Exists(_outputFilePath))
+            {
+                System.Diagnostics.Process.Start(_outputFilePath);
             }
         }
     }

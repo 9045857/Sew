@@ -15,6 +15,8 @@ namespace ForSew
         private const string ETHUSDCheckPhrase = "Instrument=ETHUSD";
         private const string InstrumentSearchPhrase = "Instrument=";
         private const string FolderSearchPhrase = "Folder=";
+        private const string StrategyExtention = ".rep";
+
 
         private StrategyRepParse strategyRepParse;
 
@@ -38,7 +40,7 @@ namespace ForSew
                 Notify?.Invoke(string.Format(Warnings.FileNotExist, path));
                 return null;
             }
-
+            //TODO разобраться с кодировками
             List<string> lines = File.ReadAllLines(path/*, Encoding.UTF8*//*GetEncoding(1251)*/).ToList();
 
             InstrumentTypes instrumentTypes = InstrumentTypes.None;
@@ -71,7 +73,8 @@ namespace ForSew
 
                 string strategyPath = line.Substring(folderSearchPhraseLength);
 
-                paths[instrumentTypes].Add(strategyPath);
+                AddStrategiesInPaths(paths, instrumentTypes, strategyPath);
+
             }
 
             if (instrumentTypes == InstrumentTypes.None)
@@ -81,6 +84,27 @@ namespace ForSew
             }
 
             return paths;
+        }
+
+        private void AddStrategiesInPaths(Dictionary<InstrumentTypes, List<string>> paths, InstrumentTypes instrumentTypes, string strategyPath)
+        {
+            if (Path.GetExtension(strategyPath) == StrategyExtention && File.Exists(strategyPath))
+            {
+                paths[instrumentTypes].Add(strategyPath);
+            }
+            else if (Directory.Exists(strategyPath))
+            {
+                string searchExtention = "*"+StrategyExtention;
+                string[] strategiesPaths = Directory.GetFiles(strategyPath, searchExtention);
+
+                foreach (string path in strategiesPaths) {
+                    paths[instrumentTypes].Add(path);
+                }
+            }
+            else
+            {
+                Notify?.Invoke(string.Format(Warnings.FileNotExist, strategyPath));
+            }
         }
 
         private void CreatePaths(Dictionary<InstrumentTypes, List<string>> paths, InstrumentTypes instrumentTypes)

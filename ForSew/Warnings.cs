@@ -5,7 +5,9 @@
     /// </summary>
     public class Warnings
     {
-        public const string FileNotExist = "Файл {0} не существует";
+        public const string FileNotExist = "Не существует Файл: {0} ";
+        public const string FileDirectoryNotExist = "Не существует файла или Папки: {0}";
+
         public const string InstrumentsDontParse = "Ошибка определения инструментов в файле: {0}";
 
         public const string ShortLine = "Строка короче поисковых слов: {0}";

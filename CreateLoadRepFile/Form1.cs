@@ -21,8 +21,7 @@ namespace CreateLoadRepFile
         public Form1()
         {
             InitializeComponent();
-            openFileDialog1.Filter = "strategy files (*.rep)|*.rep|" +
-        "All files (*.*)|*.*";
+            openFileDialog1.Filter = "Strategy files (*.rep)|*.rep|All files (*.*)|*.*";
 
             saveFileDialog1.Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*";
 
